@@ -93,4 +93,4 @@ CREATE TABLE SoftwareTicket (
 
 ---
 
-**Desenvolvido para fins académicos.**
+**Desenvolvido para fins académicos por Daniel Moraes (2022181)**
