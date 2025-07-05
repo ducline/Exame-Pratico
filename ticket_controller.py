@@ -3,6 +3,7 @@ import hashlib
 from datetime import datetime
 from ticket_models import HardwareTicket, SoftwareTicket, Usuario
 
+# string de ligação à base de dados
 CONN_STR = (
     "DRIVER={ODBC Driver 17 for SQL Server};"
     "SERVER=HP_LAPTOP_DAN\\SQLEXPRESS;"
@@ -13,9 +14,11 @@ CONN_STR = (
     "Encrypt=No;"
 )
 
+# faz hash à password
 def hash_password(password):
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
+# autentica utilizador
 def autenticar_usuario(username, password):
     conn = pyodbc.connect(CONN_STR)
     cursor = conn.cursor()
@@ -26,6 +29,7 @@ def autenticar_usuario(username, password):
         return Usuario(user.UsuarioID, user.Username, user.Tipo)
     return None
 
+# insere ticket na base de dados
 def inserir_ticket(ticket):
     conn = pyodbc.connect(CONN_STR)
     cursor = conn.cursor()
@@ -47,6 +51,7 @@ def inserir_ticket(ticket):
     conn.commit()
     conn.close()
 
+# lista todos os tickets
 def listar_tickets():
     conn = pyodbc.connect(CONN_STR)
     cursor = conn.cursor()
@@ -65,6 +70,7 @@ def listar_tickets():
                 print(f"  Software: {sw.Software}, Descrição Necessidade: {sw.DescricaoNecessidade}")
     conn.close()
 
+# lista tickets por atender
 def listar_tickets_por_atender():
     conn = pyodbc.connect(CONN_STR)
     cursor = conn.cursor()
@@ -73,6 +79,7 @@ def listar_tickets_por_atender():
     conn.close()
     return tickets
 
+# atende um ticket
 def atender_ticket():
     tickets = listar_tickets_por_atender()
     if not tickets:

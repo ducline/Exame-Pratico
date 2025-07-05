@@ -1,5 +1,7 @@
 # Ticket2Help
 
+[Repositório no GitHub](https://github.com/ducline/Exame-Pratico)
+
 Ticket2Help é uma aplicação de consola para gestão de tickets de helpdesk, desenvolvida em Python com SQL Server, organizada segundo o padrão **MVC** (Model-View-Controller).
 
 ## Funcionalidades

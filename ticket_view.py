@@ -1,54 +1,71 @@
+import getpass
 from ticket_controller import autenticar_usuario, inserir_ticket, listar_tickets, atender_ticket
 from ticket_models import HardwareTicket, SoftwareTicket
 
-def menu():
-    print("===== Ticket2Help =====")
+# mostra menu principal
+def menu_principal():
     while True:
-        username = input("Username: ")
-        password = input("Password: ")
-        usuario = autenticar_usuario(username, password)
-        if usuario:
-            print(f"Bem-vindo, {usuario.username}! ({usuario.tipo})")
+        print("\n1 - login")
+        print("2 - sair")
+        opcao = input("opção: ")
+        if opcao == "1":
+            login()
+        elif opcao == "2":
+            print("a sair...")
             break
         else:
-            print("Login inválido. Tente novamente.")
+            print("opção inválida")
 
+# faz login do utilizador
+def login():
+    username = input("username: ")
+    password = getpass.getpass("password: ")
+    user = autenticar_usuario(username, password)
+    if user:
+        print(f"bem-vindo, {user.username} ({user.tipo})")
+        menu_utilizador(user)
+    else:
+        print("login inválido")
+
+# mostra menu do utilizador
+def menu_utilizador(user):
     while True:
-        print("\n1 - Criar ticket")
-        print("2 - Listar tickets")
-        if usuario.tipo == 'tecnico':
-            print("3 - Atender ticket")
-            print("4 - Sair")
-        else:
-            print("3 - Sair")
-        opcao = input("Escolha: ")
-
-        if opcao == '1':
-            tipo = input("Tipo (H = Hardware / S = Software): ").upper()
-            if tipo == 'H':
-                equipamento = input("Equipamento: ")
-                avaria = input("Avaria: ")
-                ticket = HardwareTicket(str(usuario.usuario_id), equipamento, avaria)
-            elif tipo == 'S':
-                software = input("Software: ")
-                descricao_necessidade = input("Descrição da necessidade: ")
-                ticket = SoftwareTicket(str(usuario.usuario_id), software, descricao_necessidade)
-            else:
-                print("Tipo inválido.")
-                continue
-            inserir_ticket(ticket)
-            print("Ticket criado e salvo no banco de dados.")
-
-        elif opcao == '2':
+        print("\n1 - criar ticket")
+        print("2 - listar tickets")
+        if user.tipo == "tecnico":
+            print("3 - atender ticket")
+        print("0 - sair")
+        opcao = input("opção: ")
+        if opcao == "1":
+            criar_ticket(user)
+        elif opcao == "2":
             listar_tickets()
-
-        elif opcao == '3' and usuario.tipo == 'tecnico':
+        elif opcao == "3" and user.tipo == "tecnico":
             atender_ticket()
-
-        elif (opcao == '3' and usuario.tipo != 'tecnico') or (opcao == '4' and usuario.tipo == 'tecnico'):
+        elif opcao == "0":
             break
         else:
-            print("Opção inválida.")
+            print("opção inválida")
 
-if __name__ == '__main__':
-    menu()
+# cria novo ticket
+def criar_ticket(user):
+    print("\n1 - hardware")
+    print("2 - software")
+    tipo = input("tipo de ticket: ")
+    if tipo == "1":
+        equipamento = input("equipamento: ")
+        avaria = input("avaria: ")
+        ticket = HardwareTicket(user.username, equipamento, avaria)
+    elif tipo == "2":
+        software = input("software: ")
+        descricao = input("descrição da necessidade: ")
+        ticket = SoftwareTicket(user.username, software, descricao)
+    else:
+        print("tipo inválido")
+        return
+    inserir_ticket(ticket)
+    print("ticket criado com sucesso")
+
+# inicia aplicação
+if __name__ == "__main__":
+    menu_principal()
